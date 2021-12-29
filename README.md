@@ -1,17 +1,17 @@
-# generator-functional-utils
+# async-functional-utils
 
-Utilities for functional programming with JavaScript generators. Use functional programming operations on async data (for example, streams)!
+Utilities for functional programming with asynchronous JavaScript data (using async iterators). Use functional programming operations on async data (for example, streams)!
 
-Of course it's possible to just build up the raw data from a generator or stream and then apply functional operations synchronously. However, for large sets of data this can require significant amounts of memory. This library operates on the data stream as it flows, applying the reduce operations to one piece of data at a time _over time_ -- so only the final transformed data is stored as a single blob in memory.
+Of course it's possible to just build up the raw data from an async generator or stream and then apply functional operations synchronously. However, for large sets of data this can require significant amounts of memory. This library operates on the data stream as it flows, applying the reduce operations to one piece of data at a time _over time_ -- so only the final transformed data is stored as a single blob in memory.
 
 You can have your (functional) cake and still use memory-saving async techniques!
 
 ### Example
 
 ```
-import { compose, filter } from 'generator-functional-utils';
+import { compose, filter } from 'async-functional-utils';
 
-// Get some "async" data using a generator
+// Get some "async" data using an async generator
 async function* count() {
   for await (const a of [8, 9, 10, 11, 12]) {
     yield a;

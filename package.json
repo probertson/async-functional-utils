@@ -1,10 +1,11 @@
 {
-  "name": "generator-functional-utils",
+  "name": "async-generator-functional-utils",
   "version": "1.0.0",
   "license": "MIT",
-  "description": "Utilities for functional programming with JavaScript generators. Use functional programming operations on async data (for example, streams)!",
+  "description": "Utilities for functional programming with JavaScript async data (via async iterators). Use functional programming operations on async data (for example, streams)!",
   "keywords": [
     "async",
+    "iterator",
     "generator",
     "function*",
     "streams",
@@ -24,12 +25,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/probertson/generator-functional-utils.git"
+    "url": "https://github.com/probertson/async-functional-utils.git"
   },
   "bugs": {
-    "url": "https://github.com/probertson/generator-functional-utils/issues"
+    "url": "https://github.com/probertson/async-functional-utils/issues"
   },
-  "homepage": "https://github.com/probertson/generator-functional-utils#readme",
+  "homepage": "https://github.com/probertson/async-functional-utils#readme",
   "devDependencies": {
     "@babel/cli": "^7.16.0",
     "@babel/core": "^7.16.5",

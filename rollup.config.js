@@ -7,7 +7,7 @@ import replace from '@rollup/plugin-replace';
 export default {
   input: 'src/index.js',
   output: {
-    file: 'dist/generator-functional-utils.min.js',
+    file: 'dist/async-functional-utils.min.js',
     format: 'esm',
   },
   external: [],
