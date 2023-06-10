@@ -9,7 +9,7 @@ You can have your (functional) cake and still use memory-saving async techniques
 ### Example
 
 ```
-import { compose, filter } from 'async-functional-utils';
+import { compose, filter } from 'async-generator-functional-utils';
 
 // Get some "async" data using an async generator
 async function* count() {
