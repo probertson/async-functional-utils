@@ -1,6 +1,6 @@
 {
   "name": "async-generator-functional-utils",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "description": "Utilities for functional programming with JavaScript async data (via async iterators). Use functional programming operations on async data (for example, streams)!",
   "keywords": [
@@ -20,7 +20,7 @@
     "build": "babel src --out-dir lib --ignore 'src/**/__tests__/**/*.js'",
     "test": "jest",
     "dist": "rollup --config rollup.config.js",
-    "prepublishOnly": "yarn build",
+    "prepublishOnly": "npm run build",
     "prettier": "./node_modules/.bin/prettier --config ./.prettierrc.js --write src/**/*.js"
   },
   "repository": {

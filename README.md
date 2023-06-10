@@ -1,4 +1,4 @@
-# async-functional-utils
+# async-generator-functional-utils
 
 Utilities for functional programming with asynchronous JavaScript data (using async iterators). Use functional programming operations on async data (for example, streams)!
 
