@@ -9,7 +9,7 @@ You can have your (functional) cake and still use memory-saving async techniques
 ### Example
 
 ```
-import { compose, filter } from 'async-generator-functional-utils';
+import { compose, filter, map } from 'async-generator-functional-utils';
 
 // Get some "async" data using an async generator
 async function* count() {
@@ -57,21 +57,21 @@ resultPromise.then((result) => {
 
 ```
 
-#### `context` Arguments:
+#### `compose` Arguments:
 
-- `...reducers`: One or more reducer operations to use to transform the data. These can be the operations from this library (`reduce`, `map`, `filter`) or you can write your own higher-level operations. (Tip: all the funcitonal operations are built on top of `reduce`).
+- `...reducers`: One or more reducer operations to use to transform the data. These can be the operations from this library (`reduce`, `map`, `filter`) or you can write your own higher-level operations. (Tip: all the functional operations are built on top of `reduce`).
 
-#### `context` Return value:
+#### `compose` Return value:
 
-- A composed function `composedFn(iterator):Promise<Array|Object>`: Call this function with an iterator (usually returned by an async generator); the reducer operations will be asynchronously applied to the iterator values as each new value is yielded.
+- A composed function `composedFn(iterator: Iterable): Promise<Array | Object>`: Call this function with an iterator (usually returned by an async generator); the reducer operations will be asynchronously applied to the iterator values as each new value is yielded.
 
 #### `composedFn` Argument:
 
-- `iterator`: An object that conforms to the [iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#the_iterator_protocol). In practice this will be an async iterator returned from calling an async generator (`async function*`) function.
+- `iterator`: An object that conforms to the [iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#the_iterator_protocol) ([**Iterable** interface in TypeScript](https://www.typescriptlang.org/docs/handbook/iterators-and-generators.html#iterable-interface)). In practice this will be an async iterator returned from calling an async generator (`async function*`) function.
 
 #### `composedFn` Return value:
 
-- `Promise<Array|Object>`: A Promise that resolves when the iterator has yielded its final value.
+- `Promise<Array | Object>`: A Promise that resolves when the iterator has yielded its final value.
 
 The resolved value is an Object if the final reducer passed to `compose` is a `reduce` reducer; otherwise (e.g. if the final reducer is a `map` or `filter` reducer) the resolved value is an Array with one element per iteration value.
 
@@ -178,14 +178,14 @@ function pickMap(propName) {
   }
 
   // Add the initial value
-  mapByPropertyReducer.initial = [];
+  pickMapReducer.initial = [];
 
-  return mapByPropertyReducer
+  return pickMapReducer;
 }
 
 // Assume a generator `aAndB` that returns values in the form {a: 'foo', b: 'bar' }
 
-const result = await compose(pickMap('a'))(aAndB());
+const aValuesOnly = await compose(pickMap('a'))(aAndB());
 
-// result === ['foo', ...]
+// aValuesOnly === ['foo', ...]
 ```
