@@ -1,3 +1,5 @@
+import { describe, it, expect } from 'vitest';
+
 import { filter } from '../filter';
 import { map } from '../map';
 import { reduce } from '../reduce';
@@ -8,9 +10,9 @@ describe('compose', () => {
   const plus1Map = (value) => value + 1;
   const greaterThan10Filter = (value) => value > 10;
   const noNameFilter = (value) =>
-    value.hasOwnProperty('firstName') ||
-    value.hasOwnProperty('middleName') ||
-    value.hasOwnProperty('lastName');
+    Object.prototype.hasOwnProperty.call(value, 'firstName') ||
+    Object.prototype.hasOwnProperty.call(value, 'middleName') ||
+    Object.prototype.hasOwnProperty.call(value, 'lastName');
   const doublerReducer = (accumulator, value) => [...accumulator, value * 2];
   const assignReducer = (accumulator, value) => {
     return {

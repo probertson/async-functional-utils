@@ -15,12 +15,19 @@
     "filter"
   ],
   "author": "Paul Robertson (paul@probertson.com)",
-  "main": "lib/index.js",
+  "type": "module",
+  "main": "dist/async-generator-functional-utils.cjs.js",
+  "module": "dist/async-generator-functional-utils.esm.js",
+  "exports": {
+    "import": "./dist/async-generator-functional-utils.esm.js",
+    "require": "./dist/async-generator-functional-utils.cjs.js"
+  },
   "scripts": {
-    "build": "babel src --out-dir lib --ignore 'src/**/__tests__/**/*.js'",
-    "test": "jest",
-    "dist": "rollup --config rollup.config.js",
-    "prepublishOnly": "npm run build",
+    "test": "vitest",
+    "_clean": "rimraf ./dist/",
+    "_build": "rollup --config rollup.config.js",
+    "build": "run-s _clean _build",
+    "release": "npx release-it",
     "prettier": "./node_modules/.bin/prettier --config ./.prettierrc.js --write src/**/*.js"
   },
   "repository": {
@@ -31,23 +38,17 @@
     "url": "https://github.com/probertson/async-functional-utils/issues"
   },
   "homepage": "https://github.com/probertson/async-functional-utils#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "devDependencies": {
-    "@babel/cli": "^7.16.0",
-    "@babel/core": "^7.16.5",
-    "@babel/plugin-transform-runtime": "^7.16.5",
-    "@babel/preset-env": "^7.16.5",
-    "@babel/runtime": "^7.16.5",
-    "@rollup/plugin-commonjs": "^21.0.1",
-    "@rollup/plugin-node-resolve": "^13.1.1",
-    "@rollup/plugin-replace": "^3.0.0",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^8.5.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "jest": "^27.4.5",
-    "prettier": "^2.5.1",
-    "rollup": "^2.62.0",
-    "rollup-plugin-babel": "^4.4.0",
-    "rollup-plugin-terser": "^7.0.2"
+    "eslint": "^8.43.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.8.8",
+    "rimraf": "^5.0.1",
+    "rollup": "^3.25.1",
+    "vitest": "^0.32.2"
   }
 }

@@ -67,7 +67,7 @@ resultPromise.then((result) => {
 
 #### `composedFn` Argument:
 
-- `iterator`: An object that conforms to the [iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#the_iterator_protocol) ([**Iterable** interface in TypeScript](https://www.typescriptlang.org/docs/handbook/iterators-and-generators.html#iterable-interface)). In practice this will be an async iterator returned from calling an async generator (`async function*`) function.
+- `iterator`: An object that conforms to the [async iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#the_async_iterator_and_async_iterable_protocols). In practice this will be an async iterator returned from calling an async generator (`async function*`) function.
 
 #### `composedFn` Return value:
 
