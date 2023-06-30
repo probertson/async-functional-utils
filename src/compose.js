@@ -1,6 +1,6 @@
 export function compose(...reducers) {
   return async function composedFunctions(valueGenerator) {
-    const accumulators = reducers.map((reducer) => reducer.initial);
+    let accumulator;
 
     while (true) {
       const { done, value } = await valueGenerator.next();
@@ -10,17 +10,23 @@ export function compose(...reducers) {
       }
 
       let nextValue = value;
-      reducers.some((reducer, index) => {
-        const oldAccumulator = accumulators[index];
+      reducers.some((reducer, index, allReducers) => {
+        const isFinal = index === allReducers.length - 1;
+        const valueOut = reducer(nextValue, isFinal);
 
-        const { accumulator, valueOut } = reducer(oldAccumulator, nextValue);
-        accumulators[index] = accumulator;
-        nextValue = valueOut;
+        if (valueOut === undefined) {
+          return true;
+        }
 
-        return oldAccumulator === accumulator;
+        if (isFinal) {
+          accumulator = valueOut;
+        } else {
+          nextValue = valueOut;
+        }
+        return false;
       });
     }
 
-    return accumulators[accumulators.length - 1];
+    return accumulator;
   };
 }

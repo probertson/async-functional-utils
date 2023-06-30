@@ -1,11 +1,14 @@
 export function reduce(reduceFn, initial) {
-  function reduceReducer(accumulator, value) {
-    return {
-      accumulator: reduceFn(accumulator, value),
-      valueOut: undefined,
-    };
-  }
-  reduceReducer.initial = initial;
+  let accumulator = initial;
 
-  return reduceReducer;
+  return function reduceReducer(value, isFinal) {
+    if (!isFinal) {
+      throw new Error(
+        'The `reduce` reducer does not pass through a value, so it must be the final reducer in a composed reducer chain.'
+      );
+    }
+
+    accumulator = reduceFn(accumulator, value);
+    return accumulator;
+  };
 }

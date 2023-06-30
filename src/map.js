@@ -1,12 +1,14 @@
 export function map(mapFn) {
-  function mapReducer(accumulator, value) {
-    const valueOut = mapFn(value);
-    return {
-      accumulator: [...accumulator, valueOut],
-      valueOut,
-    };
-  }
-  mapReducer.initial = [];
+  let accumulator = [];
 
-  return mapReducer;
+  return function mapReducer(value, isFinal) {
+    const mappedValue = mapFn(value);
+
+    if (!isFinal) {
+      return mappedValue;
+    }
+
+    accumulator = [...accumulator, mappedValue];
+    return accumulator;
+  };
 }

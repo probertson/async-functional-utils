@@ -8,7 +8,7 @@ You can have your (functional) cake and still use memory-saving async techniques
 
 ### Example
 
-```
+```javascript
 import { compose, filter, map } from 'async-generator-functional-utils';
 
 // Get some "async" data using an async generator
@@ -40,14 +40,14 @@ As pieces of data are pushed out by the iterator, `compose` calls the reducers o
 
 `compose` is a higher-order function -- it creates a composed function of functional operations. You call that function, passing it a generator function (the "data source"), and it returns a Promise that is resolved when the generator returns an iterator with `done: true`:
 
-```
-async function* myGenerator() { ... };
+```javascript
+async function* myGenerator() { /*...*/ };
 
 const resultPromise = compose(
   [reducer1],
   [reducer2],
   [reducer3],
-  ...,
+  // ...,
   [reducerN]
 )(myGenerator());
 
@@ -122,65 +122,71 @@ In fact, with `map` and `reduce` already available, chances are you don't even n
 - `reduce`: for many-to-one (or many-to-N) operations, where each input value is used to modify the final output in some way
 - `filter`: for when you want to exclude certain values immediately, before applying `map` or `reduce` operations.
 
-Nevertheless, if you find yourself wanting to make a custom reducer, you certainly can (also, please submit a pull request to add the functionality to this library 😊)
+Nevertheless, if you find yourself wanting to make a custom reducer, you certainly can (also, please submit a pull request to add the functionality to this library 😊).
 
-To make your own custom reducer to use with this library, you must specify two things:
-
-1. The reducer function to be called (like the first argument of `Array.reduce()`)
-2. The initial value of the reducer (like the second argument of `Array.reduce()`)
-
-In this case the two things are bundled together in a single object: the reducer function itself, and a property named `initial` added to the reducer Function object.
+To make your own custom reducer to use with this library, you create the function that users will call, and return the reducer function that will be called on each iteration (like the first argument of `Array.reduce()`).
 
 ### The reducer function
 
 A function that implements the reducer signature (a modified version of the signature for functions passed to `Array.reduce()`):
 
 ```
-function reducer(accumulator: <T>, value: any): { accumulator: [], valueOut: any }
+reducer(value: T, isFinal: boolean) => T | any
 ```
 
 #### `reducer` Arguments:
 
-- `accumulator`: The "result" of the reducer, collected and modified over each iteration
 - `value`: The value passed through for the current iteration.
+- `isFinal`: Whether this is the final reducer in the composed reducer chain. Use this to determine what to return
 
-Note that unlike `Array.reduce`, no third and fourth arguments (`index` and `collection`) are passed to the `reducer` function. This is because of the asynchronous nature of the operations (so "index" and "collection" don't really exist) as well as the fact that maintaining the entire `collection` in memory would go against the point of this library, to be able to operate on the data one piece at a time over time.
+Note that unlike `Array.reduce`, no `index` or `collection` arguments are passed to the `reducer` function. This is because of the asynchronous nature of the operations (so "index" and "collection" don't really exist) as well as the fact that maintaining the entire `collection` in memory would go against the point of this library, to be able to operate on the data one piece at a time over time.
 
 #### `reducer` Return value:
 
-- An object with two properties:
-  - `accumulator`: The new "result" of the reducer, usually the previous `accumulator` argument (potentially) modified in some way based on the `value`
-  - `valueOut`: The output value that is passed to the next reducer. This is usually the `value` argument with some transformation applied. Set `valueOut` to `undefined` to short-circuit the current iteration and not pass anything to any subsequent reducer(s).
+When `isFinal` is `false`: The output value that is passed to the next reducer. This is usually the `value` argument with some transformation applied. (Conceptually this is like what you would return from a function passed to `Array.map()`.) Return `undefined` to short-circuit the current iteration and not pass anything to any subsequent reducer(s).
 
-### The `initial` value:
+When `isFinal` is `true`:  The new "result" of the reducer, usually some `accumulator` value (potentially) modified in some way based on the `value`. (Conceptually this is like what you would return from a function passed to `Array.reduce()`.) You can decide how to persist your accumulator between calls to your reducer -- it is not stored or tracked outside your reducer.
 
-This is the intial state of the accumulator result of this reducer operation. This is conceptually identical to the second argument passed to `Array.reduce()`. If the operation is a `map`-like operation that treats each iteration value as an element in an Array, set `initial` to `[]`. Otherwise set it to a reasonable initial value for your accumulator.
+Note that if you are making a reducer like `Array.reduce()` that does a many -> one/some transformation (as opposed to `Array.map()` that does a one -> one translation), it probably doesn't make sense to handle the `isFinal === false` case. Instead, throw an error if `isFinal` is `false`, informing the user that the reducer must be the final one in the call to `compose()`.
 
-```
-function myCustomReducerOperation(accumulator, value) { /* ... */ }
-myCustomReducerOperation.initial = []; // or {} or whatever you want
+```javascript
+function myCustomReducer(/* any configuration parameters */) {
+  let accumulator = []; // or {} or whatever
+  
+  return function myCustomReducerOperation(value, isFinal) {
+    /* do something with `value` */
+    if (!isFinal) {
+      /* return the transformed value */
+    }
+    
+    /* update accumulator and return that value */
+  }  
+}
 ```
 
 ### Putting it together
 
-Your final reducer should be a function that takes any necessary arguments and returns a function (the reducer function augmented with `initial` property). For example here is a reducer that is like `lodash`'s `map` operation with the "property name" shorthand (i.e. it "picks" the property with the specified name from each value and returns an array of those properties' values):
+Your final reducer should be a function that takes any necessary arguments and returns a function (the reducer function augmented with the `initial` property). For example here is a reducer that is like `lodash`'s `map` operation with the "property name" shorthand (i.e. it "picks" the property with the specified name from each value and returns an array of those properties' values):
 
-```
+```javascript
 function pickMap(propName) {
+  // The accumulator that is returned when this is the only or final reducer in the chain.
+  let accumulator = [];
+  
   // Define the reducer
-  function pickMapReducer(accumulator, value) {
+  return function pickMapReducer(value, isFinal) {
+    // Here is where you do your "special sauce"
     const picked = value[propName];
+    
+    // if `isFinal` is `false` return the value to pass along
+    if (!isFinal) {
+      return picked;
+    }
 
-    return {
-      accumulator: [...accumulator, picked],
-      valueOut: picked,
-    };
-  }
-
-  // Add the initial value
-  pickMapReducer.initial = [];
-
-  return pickMapReducer;
+    // otherwise update and return the accumulator
+    accumulator = [...accumulator, picked];
+    return accumulator;
+  };
 }
 
 // Assume a generator `aAndB` that returns values in the form {a: 'foo', b: 'bar' }

@@ -22,42 +22,43 @@ describe('reduce', () => {
       const startAccumulator = [];
       const reducer = reduce(doublerMap, startAccumulator);
 
-      const { accumulator: acc1, valueOut: valueOut1 } = reducer(
-        startAccumulator,
-        7
-      );
-      const { accumulator: acc2, valueOut: valueOut2 } = reducer(acc1, 8);
-      const { accumulator: acc3, valueOut: valueOut3 } = reducer(acc2, 9);
+      const acc1 = reducer(7, true);
+      const acc2 = reducer(8, true);
+      const acc3 = reducer(9, true);
 
       expect(acc1).toEqual([14]);
       expect(acc2).toEqual([14, 16]);
       expect(acc3).toEqual([14, 16, 18]);
-      expect(valueOut1).toBeUndefined();
-      expect(valueOut2).toBeUndefined();
-      expect(valueOut3).toBeUndefined();
     });
 
     it('works with array -> object reducers', () => {
       const startAccumulator = {};
       const reducer = reduce(assign, startAccumulator);
 
-      const { accumulator: acc1, valueOut: valueOut1 } = reducer(
-        startAccumulator,
-        { a: 1 }
+      const acc1 = reducer({ a: 1 }, true);
+      const acc2 = reducer(
+        {
+          b: 2,
+        },
+        true
       );
-      const { accumulator: acc2, valueOut: valueOut2 } = reducer(acc1, {
-        b: 2,
-      });
-      const { accumulator: acc3, valueOut: valueOut3 } = reducer(acc2, {
-        c: 3,
-      });
+      const acc3 = reducer(
+        {
+          c: 3,
+        },
+        true
+      );
 
       expect(acc1).toEqual({ a: 1 });
       expect(acc2).toEqual({ a: 1, b: 2 });
       expect(acc3).toEqual({ a: 1, b: 2, c: 3 });
-      expect(valueOut1).toBeUndefined();
-      expect(valueOut2).toBeUndefined();
-      expect(valueOut3).toBeUndefined();
+    });
+
+    it('throws an error if it is not the final reducer in the chain', () => {
+      const startAccumulator = [];
+      const reducer = reduce(doublerMap, startAccumulator);
+
+      expect(() => reducer(7, false)).toThrow();
     });
   });
 });

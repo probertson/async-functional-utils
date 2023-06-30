@@ -13,24 +13,40 @@ describe('map', () => {
   });
 
   describe('reducer', () => {
-    it('works with `identity`', () => {
-      const reducer = map(identity);
-      const startAccumulator = [];
+    describe('passing through a value to another reducer', () => {
+      it('works with `identity`', () => {
+        const reducer = map(identity);
 
-      const { accumulator, valueOut } = reducer(startAccumulator, 7);
+        const valueOut = reducer(7, false);
 
-      expect(accumulator[0]).toEqual(7);
-      expect(valueOut).toEqual(7);
+        expect(valueOut).toEqual(7);
+      });
+
+      it('works with `plus1`', () => {
+        const reducer = map(plus1);
+
+        const valueOut = reducer(7, false);
+
+        expect(valueOut).toEqual(8);
+      });
     });
 
-    it('works with `plus1`', () => {
-      const reducer = map(plus1);
-      const startAccumulator = [];
+    describe('returning the final result', () => {
+      it('works with `identity`', () => {
+        const reducer = map(identity);
 
-      const { accumulator, valueOut } = reducer(startAccumulator, 7);
+        const valueOut = reducer(7, true);
 
-      expect(accumulator[0]).toEqual(8);
-      expect(valueOut).toEqual(8);
+        expect(valueOut).toEqual([7]);
+      });
+
+      it('works with `plus1`', () => {
+        const reducer = map(plus1);
+
+        const valueOut = reducer(7, true);
+
+        expect(valueOut).toEqual([8]);
+      });
     });
   });
 });

@@ -1,18 +1,14 @@
 export function filter(filterFn) {
-  function filterReducer(accumulator, value) {
-    if (filterFn(value)) {
-      return {
-        accumulator: [...accumulator, value],
-        valueOut: value,
-      };
+  let accumulator = [];
+
+  return function filterReducer(value, isFinal) {
+    const include = filterFn(value);
+
+    if (!isFinal) {
+      return include ? value : undefined;
     }
 
-    return {
-      accumulator,
-      valueOut: undefined,
-    };
-  }
-  filterReducer.initial = [];
-
-  return filterReducer;
+    accumulator = include ? [...accumulator, value] : accumulator;
+    return accumulator;
+  };
 }

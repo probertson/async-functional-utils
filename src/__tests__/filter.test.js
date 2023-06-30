@@ -13,24 +13,40 @@ describe('filter', () => {
   });
 
   describe('reducer', () => {
-    it('includes values', () => {
-      const reducer = filter(greaterThan5);
-      const startAccumulator = [];
+    describe('passing through a value to another reducer', () => {
+      it('includes values', () => {
+        const reducer = filter(greaterThan5);
 
-      const { accumulator, valueOut } = reducer(startAccumulator, 7);
+        const valueOut = reducer(7, false);
 
-      expect(accumulator[0]).toEqual(7);
-      expect(valueOut).toEqual(7);
+        expect(valueOut).toEqual(7);
+      });
+
+      it('excludes values', () => {
+        const reducer = filter(greaterThan10);
+
+        const valueOut = reducer(7, false);
+
+        expect(valueOut).toBeUndefined();
+      });
     });
 
-    it('excludes values', () => {
-      const reducer = filter(greaterThan10);
-      const startAccumulator = [];
+    describe('returning the final result', () => {
+      it('includes values', () => {
+        const reducer = filter(greaterThan5);
 
-      const { accumulator, valueOut } = reducer(startAccumulator, 7);
+        const valueOut = reducer(7, true);
 
-      expect(accumulator.length).toEqual(0);
-      expect(valueOut).toBeUndefined();
+        expect(valueOut).toEqual([7]);
+      });
+
+      it('excludes values', () => {
+        const reducer = filter(greaterThan10);
+
+        const valueOut = reducer(7, true);
+
+        expect(valueOut).toEqual([]);
+      });
     });
   });
 });
