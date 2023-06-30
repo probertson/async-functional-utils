@@ -1,3 +1,7 @@
+export const ReturnEarly = Symbol(
+  'stop processing a value and move to the next value'
+);
+
 export function compose(...reducers) {
   return async function composedFunctions(valueGenerator) {
     let accumulator;
@@ -14,7 +18,7 @@ export function compose(...reducers) {
         const isFinal = index === allReducers.length - 1;
         const valueOut = reducer(nextValue, isFinal);
 
-        if (valueOut === undefined) {
+        if (valueOut === ReturnEarly) {
           return true;
         }
 

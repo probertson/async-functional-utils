@@ -1,10 +1,10 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 import { filter } from '../filter';
 import { map } from '../map';
 import { reduce } from '../reduce';
 
-import { compose } from '../compose';
+import { compose, ReturnEarly } from '../compose';
 
 describe('compose', () => {
   const plus1Map = (value) => value + 1;
@@ -38,6 +38,24 @@ describe('compose', () => {
       yield o;
     }
   }
+
+  it('stops processing when a reducer returns ReturnImmediately', async () => {
+    // A reducer that filters out everything
+    function impregnableFortress() {
+      return function reducer() {
+        return ReturnEarly;
+      };
+    }
+
+    const unreachableReducer = vi.fn();
+    function unreachable() {
+      return unreachableReducer;
+    }
+
+    const result = await compose(impregnableFortress(), unreachable())(count());
+
+    expect(unreachableReducer).not.toHaveBeenCalled();
+  });
 
   it('filters', async () => {
     const result = await compose(filter(greaterThan10Filter))(count());

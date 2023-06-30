@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
 
+import { ReturnEarly } from '../compose.js';
+
 import { filter } from '../filter';
 
 describe('filter', () => {
@@ -27,7 +29,7 @@ describe('filter', () => {
 
         const valueOut = reducer(7, false);
 
-        expect(valueOut).toBeUndefined();
+        expect(valueOut).toBe(ReturnEarly);
       });
     });
 

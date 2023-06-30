@@ -143,7 +143,7 @@ Note that unlike `Array.reduce`, no `index` or `collection` arguments are passed
 
 #### `reducer` Return value:
 
-When `isFinal` is `false`: The output value that is passed to the next reducer. This is usually the `value` argument with some transformation applied. (Conceptually this is like what you would return from a function passed to `Array.map()`.) Return `undefined` to short-circuit the current iteration and not pass anything to any subsequent reducer(s).
+When `isFinal` is `false`: The output value that is passed to the next reducer. This is usually the `value` argument with some transformation applied. (Conceptually this is like what you would return from a function passed to `Array.map()`.) Return the `ReturnEarly` Symbol to short-circuit the current iteration and not pass anything to any subsequent reducer(s).
 
 When `isFinal` is `true`:  The new "result" of the reducer, usually some `accumulator` value (potentially) modified in some way based on the `value`. (Conceptually this is like what you would return from a function passed to `Array.reduce()`.) You can decide how to persist your accumulator between calls to your reducer -- it is not stored or tracked outside your reducer.
 

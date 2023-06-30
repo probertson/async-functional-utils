@@ -1,3 +1,5 @@
+import { ReturnEarly } from './compose.js';
+
 export function filter(filterFn) {
   let accumulator = [];
 
@@ -5,7 +7,7 @@ export function filter(filterFn) {
     const include = filterFn(value);
 
     if (!isFinal) {
-      return include ? value : undefined;
+      return include ? value : ReturnEarly;
     }
 
     accumulator = include ? [...accumulator, value] : accumulator;
