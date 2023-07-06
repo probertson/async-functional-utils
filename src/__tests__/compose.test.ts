@@ -7,14 +7,27 @@ import { reduce } from '../reduce';
 import { compose, ReturnEarly } from '../compose';
 
 describe('compose', () => {
-  const plus1Map = (value) => value + 1;
-  const greaterThan10Filter = (value) => value > 10;
-  const noNameFilter = (value) =>
+  const plus1Map = (value: number) => value + 1;
+
+  const greaterThan10Filter = (value: number) => value > 10;
+
+  type MaybeNameObject = {
+    firstName?: string;
+    middleName?: string;
+    lastName?: string;
+  };
+
+  const noNameFilter = (value: MaybeNameObject) =>
     Object.prototype.hasOwnProperty.call(value, 'firstName') ||
     Object.prototype.hasOwnProperty.call(value, 'middleName') ||
     Object.prototype.hasOwnProperty.call(value, 'lastName');
-  const doublerReducer = (accumulator, value) => [...accumulator, value * 2];
-  const assignReducer = (accumulator, value) => {
+
+  const doublerReducer = (accumulator: number[], value: number) => [
+    ...accumulator,
+    value * 2,
+  ];
+
+  const assignReducer = (accumulator: object, value: object) => {
     return {
       ...accumulator,
       ...value,
@@ -52,7 +65,7 @@ describe('compose', () => {
       return unreachableReducer;
     }
 
-    const result = await compose(impregnableFortress(), unreachable())(count());
+    await compose(impregnableFortress(), unreachable())(count());
 
     expect(unreachableReducer).not.toHaveBeenCalled();
   });
@@ -109,7 +122,11 @@ describe('compose', () => {
   });
 
   it('combines filter and reduce (array -> object)', async () => {
-    const result = await compose(
+    const result = await compose<
+      MaybeNameObject,
+      MaybeNameObject,
+      MaybeNameObject
+    >(
       filter(noNameFilter),
       reduce(assignReducer, {})
     )(nameSegments());

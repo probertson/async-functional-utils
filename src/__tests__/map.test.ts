@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
 
-import { map } from '../map';
+import { map } from '../map.js';
 
 describe('map', () => {
-  const identity = (value) => value;
-  const plus1 = (value) => value + 1;
+  const identity = (value: number) => value;
+  const plus1 = (value: number) => value + 1;
 
   it('returns a reducer function', () => {
     const reducer = map(identity);

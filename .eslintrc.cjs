@@ -4,15 +4,14 @@ module.exports = {
     node: true,
   },
   overrides: [],
-  parser: '',
-  extends: ['eslint:recommended', 'prettier'],
+  parser: '@typescript-eslint/parser',
+  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended'],
   parserOptions: {
     ecmaVersion: 9,
     sourceType: 'module',
   },
-  plugins: ['prettier'],
+  plugins: ['@typescript-eslint'],
   rules: {
-    'prettier/prettier': 'error',
     'no-constant-condition': ['error', { checkLoops: false }],
   },
   globals: {},

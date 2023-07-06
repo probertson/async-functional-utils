@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest';
 
-import { ReturnEarly } from '../compose.js';
+import { ReturnEarly } from '../compose';
 
-import { filter } from '../filter';
+import { filter } from '../filter.js';
 
 describe('filter', () => {
-  const greaterThan5 = (value) => value > 5;
-  const greaterThan10 = (value) => value > 10;
+  const greaterThan5 = (value: number) => value > 5;
+  const greaterThan10 = (value: number) => value > 10;
 
   it('returns a reducer function', () => {
     const reducer = filter(greaterThan5);

@@ -3,8 +3,11 @@ import { describe, it, expect } from 'vitest';
 import { reduce } from '../reduce';
 
 describe('reduce', () => {
-  const doublerMap = (accumulator, value) => [...accumulator, value * 2];
-  const assign = (accumulator, value) => {
+  const doublerMap = (accumulator: number[], value: number) => [
+    ...accumulator,
+    value * 2,
+  ];
+  const assign = (accumulator: object, value: object) => {
     return {
       ...accumulator,
       ...value,
@@ -19,7 +22,7 @@ describe('reduce', () => {
 
   describe('reducer', () => {
     it('works with array -> array reducers', () => {
-      const startAccumulator = [];
+      const startAccumulator: number[] = [];
       const reducer = reduce(doublerMap, startAccumulator);
 
       const acc1 = reducer(7, true);
@@ -55,7 +58,7 @@ describe('reduce', () => {
     });
 
     it('throws an error if it is not the final reducer in the chain', () => {
-      const startAccumulator = [];
+      const startAccumulator: number[] = [];
       const reducer = reduce(doublerMap, startAccumulator);
 
       expect(() => reducer(7, false)).toThrow();

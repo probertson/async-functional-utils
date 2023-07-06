@@ -22,6 +22,7 @@
     "import": "./dist/async-generator-functional-utils.esm.js",
     "require": "./dist/async-generator-functional-utils.cjs.js"
   },
+  "types": "dist/async-generator-functional-utils.d.ts",
   "scripts": {
     "test": "vitest",
     "_clean": "rimraf ./dist/",
@@ -42,6 +43,9 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
+    "@rollup/plugin-typescript": "^11.1.2",
+    "@typescript-eslint/eslint-plugin": "^5.60.1",
+    "@typescript-eslint/parser": "^5.60.1",
     "eslint": "^8.43.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
@@ -49,6 +53,9 @@
     "prettier": "^2.8.8",
     "rimraf": "^5.0.1",
     "rollup": "^3.25.1",
+    "rollup-plugin-dts": "^5.3.0",
+    "tslib": "^2.6.0",
+    "typescript": "^5.1.6",
     "vitest": "^0.32.2"
   }
 }
